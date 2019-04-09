@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<!--使用静态工厂进行Bean对象的创建-->
+    <bean id="dogfactory" class="com.beanfactory.BeanFactory" factory-method="getBean">
+
+    </bean>
+<!--使用实例工厂进行创建-->
+    <bean id="dogfactory1" class="com.beanfactory.BeanFactory"></bean>
+    <bean id="factorybean" factory-bean="dogfactory1"  factory-method="getBean2"></bean>
+</beans>
