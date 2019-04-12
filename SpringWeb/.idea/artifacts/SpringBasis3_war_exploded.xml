@@ -1,0 +1,23 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="SpringBasis3:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/SpringBasis3_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="SpringWeb/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="SpringWeb" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="file-copy" path="E:/JavaFrame/Spring/架包/commons-logging-1.2.jar" />
+          <element id="file-copy" path="E:/JavaFrame/Spring/架包/log4j-1.2.17.jar" />
+          <element id="file-copy" path="E:/JavaFrame/Spring/spring-framework-4.2.4.RELEASE/libs/spring-aop-4.2.4.RELEASE.jar" />
+          <element id="file-copy" path="E:/JavaFrame/Spring/spring-framework-4.2.4.RELEASE/libs/spring-core-4.2.4.RELEASE.jar" />
+          <element id="file-copy" path="E:/JavaFrame/Spring/spring-framework-4.2.4.RELEASE/libs/spring-expression-4.2.4.RELEASE.jar" />
+          <element id="file-copy" path="E:/JavaFrame/Spring/spring-framework-4.2.4.RELEASE/libs/spring-web-4.2.4.RELEASE.jar" />
+          <element id="file-copy" path="E:/JavaFrame/Spring/spring-framework-4.2.4.RELEASE/libs/spring-context-4.2.4.RELEASE.jar" />
+          <element id="file-copy" path="E:/JavaFrame/Spring/spring-framework-4.2.4.RELEASE/libs/spring-beans-4.2.4.RELEASE.jar" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
