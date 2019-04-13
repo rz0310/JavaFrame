@@ -1,0 +1,24 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="SpringEL:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/SpringEL_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="SpringEL/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="SpringEL" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="file-copy" path="E:/JavaFrame/Spring/架包/log4j-1.2.17.jar" />
+          <element id="file-copy" path="E:/JavaFrame/Spring/架包/commons-logging-1.2.jar" />
+          <element id="file-copy" path="E:/JavaFrame/Spring/spring-framework-4.2.4.RELEASE/libs/spring-aop-4.2.4.RELEASE.jar" />
+          <element id="file-copy" path="E:/JavaFrame/Spring/spring-framework-4.2.4.RELEASE/libs/spring-beans-4.2.4.RELEASE.jar" />
+          <element id="file-copy" path="E:/JavaFrame/Spring/spring-framework-4.2.4.RELEASE/libs/spring-context-4.2.4.RELEASE.jar" />
+          <element id="file-copy" path="E:/JavaFrame/Spring/spring-framework-4.2.4.RELEASE/libs/spring-core-4.2.4.RELEASE.jar" />
+          <element id="file-copy" path="E:/JavaFrame/Spring/spring-framework-4.2.4.RELEASE/libs/spring-expression-4.2.4.RELEASE.jar" />
+          <element id="file-copy" path="E:/JavaFrame/Spring/spring-framework-4.2.4.RELEASE/libs/spring-test-4.2.4.RELEASE.jar" />
+          <element id="library" level="module" name="JUnit4" module-name="SpringEL" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
