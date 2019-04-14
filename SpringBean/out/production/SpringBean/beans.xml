@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--使用无参构造创建对象-->
+    <bean id="ICustomerServiceImp" class="com.renjing.service.imp.ICustomerServiceImp" scope="singleton" init-method="init" destroy-method="destory">
+    </bean>
+    <!--使用静态工厂创建对象-->
+    <!--<bean id="staticCustomerService" class="com.renjing.factory.StaticFactory" factory-method="getCustomerService"></bean>-->
+    <!--使用实例工厂创建对象-->
+    <!--<bean id="InstanceFactory" class="com.renjing.factory.InstanceFactory"></bean>-->
+    <!--<bean id="InstanceCustomerService" factory-bean="InstanceFactory" class="com.renjing.factory.InstanceFactory" factory-method="getCustomerService"></bean>-->
+</beans>
