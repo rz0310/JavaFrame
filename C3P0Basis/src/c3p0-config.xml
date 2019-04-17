@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<c3p0-config>
+    <default-config>
+        <properties name="driverClass">com.mysq.jdbc.Driver</properties>
+        <properties name="jdbcUrl">jdbc:mysql://localhost:3306/up1?useUnicode=true&amp;characterEncoding=utf-8</properties>
+        <properties name="user">root</properties>
+        <properties name="password">root</properties>
+        <properties name="acquireIncrement">5</properties>
+        <properties name="initialPoolSize">10</properties>
+        <properties name="minPoolSize">5</properties>
+        <properties name="maxPoolSize">20</properties>
+    </default-config>
+</c3p0-config>
