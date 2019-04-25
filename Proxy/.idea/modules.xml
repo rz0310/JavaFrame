@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SpringJunit.iml" filepath="$PROJECT_DIR$/SpringJunit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Proxy.iml" filepath="$PROJECT_DIR$/Proxy.iml" />
     </modules>
   </component>
 </project>
