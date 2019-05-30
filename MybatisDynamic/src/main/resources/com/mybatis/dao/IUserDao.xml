@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.dao.IUserDao">
+    <!--配置实体类属性与数据库列名的对应关系-->
+    <resultMap id="userMap" type="com.mybatis.domain.User">
+        <!--主键字段的对应-->
+        <id property="userId" column="id"></id>
+        <!--非主键字段的对应-->
+        <result property="userName" column="username"></result>
+        <result property="userAddress" column="address"></result>
+        <result property="userSex" column="sex"></result>
+        <result property="userBirthday" column="birthday"></result>
+    </resultMap>
+    <!--查询所有-->
+    <select id="findAll"  resultMap="userMap">
+        select * from user
+    </select>
+    <!--插入用户-->
+    <insert id="insertUser" parameterType="com.mybatis.domain.User">
+        <selectKey keyProperty="userId" keyColumn="id" resultType="int" order="AFTER">
+            select last_insert_id();
+        </selectKey>
+        insert into user(username,address,sex,birthday) value(#{userName},#{userAddress},#{userSex},#{userBirthday})
+    </insert>
+    <!--更新用户-->
+    <update id="updateUser" parameterType="com.mybatis.domain.User">
+        update user set username=#{userName},address=#{userAddress},sex=#{userSex},birthday=#{userBirthday} where id=#{userId}
+    </update>
+    <!--删除用户-->
+    <delete id="deleteUser" parameterType="Integer">
+        delete from user where id=#{uid}
+    </delete>
+    <!--按照id查询一个-->
+    <select id="findUserById" parameterType="Integer" resultType="com.mybatis.domain.User">
+        select * from user where id=#{uid}
+    </select>
+    <!--按照名称查询-->
+    <select id="findUserByName" parameterType="String" resultType="com.mybatis.domain.User">
+        <!--select * from user where username like #{username}-->
+        select * from user where username like '%${value}%'
+    </select>
+    <!--根据pojo包装对象查询-->
+    <select id="findUserByNameQueryVo" parameterType="com.mybatis.domain.UserQueryVo" resultType="com.mybatis.domain.User">
+        select * from user where username like '${user.userName}'
+    </select>
+    <!--抽取sql片段-->
+    <sql id="myUser">
+        select * from user
+    </sql>
+    <select id="findByCondition" parameterType="user" resultMap="userMap">
+        <!--引用sql片段-->
+        <include refid="myUser"></include>
+        <where>
+            <if test="userName!=null">
+                and username=#{userName}
+            </if>
+            <if test="userSex!=null">
+                and sex=#{userSex}
+            </if>
+        </where>
+    </select>
+    <!--使用集合查询用户-->
+    <select id="findByList" resultMap="userMap" parameterType="UserQueryVo">
+        <include refid="myUser"></include>
+        <where>
+            <if test="list!=null and list.size()>0">
+                <foreach collection="list" open="and id in(" close=")" item="uid" separator=",">
+                    #{uid}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>
