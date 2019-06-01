@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace命名空间，作用就是对sql进行分类化管理，理解sql隔离
+注意：使用mapper方法代理开发，namespace有特殊的作用
+
+注意：使用resultType进行输出映射，只有查询出来的列名和pojo中的属性值一致，该列才可以映射成功。
+如果查询出来的列名和pojo的属性名不一致，可以通过定义一个resultMap对列名和pojo属性名之间做一个映射关系、
+-->
+<mapper namespace="com.renjing.mybatis.mapper.UserMapper">
+
+    <!--引用sql片段的id，如果指定的id不再本mapper文件中，需要前边加namespace
+            经验：基于单表来定义sql片段，这样的话sql片段的可重用性才会高一些
+            在sql片段中不要包含where
+            -->
+    <!--定义sql片段-->
+    <sql id="query_user_list">
+        <if test="userCustomer=null">
+            <if test="userCustomer.username!=null and userCustomer.username!=''">
+                and user.username like '%${userCustomer.username}%'
+            </if>
+            <if test="userCustomer.password!=null and userCustomer.password!=''">
+                and user.password like '%${userCustomer.password}%'
+            </if>
+        </if>
+    </sql>
+
+    <!--引用sql片段-->
+    <select id="findUserList" parameterType="com.renjing.mybatis.po.UserQueryVo" resultMap="com.renjing.mybatis.po.UserCustomer">
+        select * from user
+        <where>
+            <!--引用sql片段的id，如果refid指定的id不再本mapper文件中，需要在前边加namespace-->
+            <include refid="query_user_list"></include>
+            <!--在这里还要引用其他的sql片段-->
+        </where>
+    </select>
+
+    <!--定义一个resultMap
+    将select id id_,username,username_ from user和User类中的属性做一个映射关系
+    type：resultMap最终映射的java对象类型，可以使用别名
+    id：对resultMap的唯一标识-->
+    <resultMap id="userResultMap" type="com.renjing.mybatis.po.User">
+        <!--id表示查询结果集中的唯一标识
+        column：查询出来的列名
+        property：type指定的pojo类型中的属性名
+        最终resultMap对column和property做一个映射关系-->
+        <id column="id_" property="id"></id>
+        <!--result：对普通列的映射定义
+        column：查询出来的列名
+        property：type指定的pojo类型中的属性名
+        最终resultMap对column和property做一个映射关系-->
+        <result column="username_" property="username"></result>
+    </resultMap>
+    <select id="findUserByIdResultMap" parameterType="Int" resultMap="userResultMap">
+        select id id_,username username_ from user where id=#{value}
+    </select>
+    <!--根据id查询用户-->
+    <select id="findUserById" parameterType="Integer" resultType="user">
+        select * from user where id=#{id}
+    </select>
+    <!--根据name查询用户-->
+    <select id="findUserByName" parameterType="java.lang.String" resultType="com.renjing.mybatis.po.User">
+        select * from user where username like '%${value}%'
+    </select>
+    <!--查询多条用户记录-->
+    <select id="findUserList" parameterType="com.renjing.mybatis.po.UserQueryVo" resultType="com.renjing.mybatis.po.UserCustomer">
+        select * from user
+--         where password like '%${userCustomer.password}%' or username like '%${userCustomer.username}%';
+--         where可以自动去掉条件中的第一个and
+        <where>
+            <if test="userCustomer!=null">
+                <if test="userCustomer.username!=null and userCustomer.username!=''">
+                    and user.username like '%${userCustomer.username}%'
+                </if>
+                <if test="userCustomer.password!=null and userCustomer.username!=''">
+                    or user.password like '%${userCustomer.password}%'
+                </if>
+
+                <if test="idList!=null">
+                    <!--使用实现以下的sql拼接
+                and (id=1 or id=10 or id=11)
+                使用foreach遍历传入idList
+                collection：指定输入对象中的集合属性
+                item：每个遍历生成对象中的属性
+                open：开始遍历时拼接的串
+                close：结束遍历时拼接的串
+                separator：遍历的两个对象中需要拼接的串
+                -->
+                    <!--<foreach collection="idList" item="user_id" open="and (" close=")" separator="or">-->
+                        <!--id=#{user_id}-->
+                    <!--</foreach>-->
+
+                    <!--使用实现以下的sql拼接
+                and id in(1,10,11)-->
+                    <foreach collection="idList" item="user_id" open="and id in(" close=")" separator=",">
+                        #{user_id}
+                    </foreach>
+                </if>
+            </if>
+        </where>
+    </select>
+    <select id="findUserCount" parameterType="com.renjing.mybatis.po.UserQueryVo" resultType="java.lang.Integer">
+        select count(*) from user
+--         where password like '%${userCustomer.password}%' or username like '%${userCustomer.username}%'
+        <where>
+            <if test="userCustomer!=null">
+                <if test="userCustomer.username!=null and userCustomer.username!=''">
+                    and user.username like '%${userCustomer.username}%'
+                </if>
+                <if test="userCustomer.password!=null and userCustomer.username!=''">
+                    and user.password like '%${userCustomer.password}%'
+                </if>
+            </if>
+        </where>
+    </select>
+   <!--插入新用户-->
+    <insert id="insertUser" parameterType="com.renjing.mybatis.po.User">
+        <!--<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">-->
+          <!--select LAST_INSERT_ID();-->
+        <!--</selectKey>-->
+      insert into user(id,username,password) value(#{id},#{username},#{password})
+        <!--<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">-->
+            <!--select uuid();-->
+        <!--</selectKey>-->
+        <!--insert into user(id,username,password) value(#{id},#{username},#{password});-->
+    </insert>
+    <!--删除用户：
+    根据id删除用户，需要输入id值-->
+    <delete id="deleteUser" parameterType="java.lang.Integer">
+        delete from user where id=#{id}
+    </delete>
+    <!--根据id更新用户-->
+    <update id="updateUser" parameterType="com.renjing.mybatis.po.User">
+        update user set username=#{username},password=#{password} where id=#{id}
+    </update>
+</mapper>

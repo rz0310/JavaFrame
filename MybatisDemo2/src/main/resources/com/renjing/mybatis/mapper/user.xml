@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace命名空间，作用就是对sql进行分类化管理，理解sql隔离
+注意：使用mapper方法代理开发，namespace有特殊的作用
+
+注意：(1)#{}表示一个占位符号，#{}接收输入参数，类型可以是简单类型，例如pojo、HashMap。
+如果接收简单类型，#{}中可以写成value或其他名称。
+#{}接收pojo对象值，通过ONGL读取对象中的属性值，通过属性.属性...的方式获取对象属性值。
+
+${}：表示一个拼接符号，会引起sql注入，所以不建议使用${}。
+${}接收输入参数，类型可以是简单类型，pojo、HashMap。
+如果接收简单类型，${}只能写成value。
+${}接收对象值，通过OGNL读取对象中的属性值，通过属性.属性...的方式获取对象属性值。
+-->
+<mapper namespace="userMapper">
+
+    <!--在映射文件中配置很多sql语句-->
+    <!--需求：通过id查询用户表的记录-->
+    <!--通过select执行数据库查询
+    id：标识映射文件中的sql
+    将sql语句封装到mappedStatement对象中，所以id称为statement的id
+    parameterType：制定输入参数的类型，这里指定为int型
+
+    #{}：表示一个占位符
+
+    #{}：其中的id表示接收输入的参数，参数名称就是id，如果输入类型是简单类型，#{}中的参数名可以任意，可以是value或其他对象
+    resultType：指定sql输出结果所映射的Java对象类型，select指定resultType表示将单条记录映射成的Java对象-->
+    <select id="findUserById" parameterType="Integer" resultType="com.renjing.mybatis.po.User">
+        select * from user where id=#{id}
+    </select>
+    <!--根据用户名称模糊查询用户信息，可能返回多条
+    resultType：指定的就是单条记录所映射的java对象类型
+
+    ${}：表示sql拼接串，将接收到的参数的内容不加任何修饰的拼接在sql中。
+
+    注意：使用${}拼接sql，引起sql注入。
+    ${value}：接收输入参数的内容，如果传入类型是简单类型，${}中只能是value。
+    -->
+    <select id="findUserByName" parameterType="java.lang.String" resultType="com.renjing.mybatis.po.User">
+        select * from user where username like '%${value}%'
+    </select>
+    <!--添加用户
+    parameterType：指定输入参数类型是pojo(包括用户信息)
+    #{}中指定pojo的属性名，接收到pojo对象的属性值。mybatis通过ONGL获取对象的属性值。
+    将插入数据的主键返回，返回到user对象中
+        select LAST_INSERT_ID()：得到insert进去记录的主键值，只适用于主键自增
+        keyProperty将查询到的主键值设置到parameterType指定的对象的那个属性(id)
+        order：相对于select LAST_INSERT_ID();语句来说它们的执行顺序
+        resultType：指定select LAST_INSERT_ID();的结果类型
+    -->
+    <!--
+            通过mysql的uuid生成主键
+            执行过程：
+            首先通过uuid()得到主键，将主键设置到user对象的id属性中
+            其次，在insert执行时，从user中取出id属性值插入
+        -->
+    <!--注意：selectKey只能有一个，多个会报错-->
+    <insert id="insertUser" parameterType="com.renjing.mybatis.po.User">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+          select LAST_INSERT_ID();
+        </selectKey>
+      insert into user(username,password) value(#{username},#{password})
+        <!--<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">-->
+            <!--select uuid();-->
+        <!--</selectKey>-->
+        <!--insert into user(id,username,password) value(#{id},#{username},#{password});-->
+    </insert>
+    <!--
+    删除用户：
+    根据id删除用户，需要输入id值-->
+    <delete id="deleteUser" parameterType="java.lang.Integer">
+        delete from user where id=#{id}
+    </delete>
+    <!--根据id更新用户
+    分析：传入需要的id值，传入需要更新的用户信息
+    parameterType指定user对象，包括id和更新信息，注意id必须存在
+    #{id}：从user对象中获取id属性值
+    -->
+    <update id="updateUser" parameterType="com.renjing.mybatis.po.User">
+        update user set username=#{username},password=#{password} where id=#{id}
+    </update>
+</mapper>
